@@ -3,10 +3,10 @@ import styled from "styled-components";
 export const Container = styled.div`
     background-color: #3d3f43; 
     padding: 10px; 
+    padding-bottom: 15px;
     border-radius: 10px;
     display: flex;
-    flex-direction: column;
-    width: 100%;  
+    flex-direction: column;   
     justify-content: center;
     gap: 1rem; 
     color: #fff;
@@ -40,8 +40,15 @@ export const Buttons = styled.div`
     justify-content: center;
     gap: 0.5rem; 
 
+    //media queries
+    @media only screen and (min-width: 445px) and (max-width: 670px) {
+        flex-direction: column; 
+    }
+
     button, a {
-        display: block; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border: none; 
         outline: none; 
         cursor: pointer; 
@@ -50,6 +57,7 @@ export const Buttons = styled.div`
         padding: 10px; 
         font-size: 1rem; 
         border-radius: 10px; 
+
         
         &:hover, &:active {
             opacity: 0.9; 

@@ -1,103 +1,129 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, Fragment } from "react";
 import { getAll, insert, remove } from "./services/photos";
 import { Photo } from "./types/photo";
 import PhotoItem from "./components/PhotoItem";
-import { Area, Container, Header,
-   PhotoList, ScreenWarning, UploadForm } 
-from "./App.styles";
+import GlobalStyle from "./styles/global";
+import {
+  Area,
+  Container,
+  Header,
+  PhotoList,
+  ScreenWarning,
+  UploadForm,
+} from "./styles/App.styles";
 
-export default function App() {  
+export default function App() {
   const [loading, setLoading] = useState(false);
   const [photos, setPhotos] = useState<Photo[]>([]);
-  const [sending, setSending] = useState(false);  
+  const [sending, setSending] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
-    const formData = new FormData(e.currentTarget); 
-    const file = formData.get('image') as File; 
-    
-    if(file && file.size > 0) {
-      setSending(true); 
-      const result = await insert(file); 
-      setSending(false); 
-    
-      if(result instanceof Error) {
-        alert(`${result.name}: ${result.message}`); 
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const file = formData.get("image") as File;
+
+    if (file && file.size > 0) {
+      setSending(true);
+      const result = await insert(file);
+      setSending(false);
+
+      if (result instanceof Error) {
+        alert(`${result.name}: ${result.message}`);
       } else {
-        const photoListCopy = [...photos]; 
-        photoListCopy.push(result); 
-        setPhotos(photoListCopy); 
+        const photoListCopy = [...photos];
+        photoListCopy.push(result);
+        setPhotos(photoListCopy);
       }
     }
-  }
+  };
 
   const deletePhoto = (id: string) => {
-    console.log(photos); 
-    if(id != null && id.length > 0) {
+    console.log(photos);
+    if (id != null && id.length > 0) {
       remove(id)
-        .then(data => {
+        .then((data) => {
           console.log(data);
-          alert('The file was successfully deleted!'); 
+          alert("The file was successfully deleted!");
           return getAll();
         })
-        .then(data => {
-          if(data.length > 0) {
-            setPhotos(data); 
+        .then((data) => {
+          if (data.length > 0) {
+            setPhotos(data);
           } else {
-            setPhotos([]); 
+            setPhotos([]);
           }
         })
-        .catch(e => {
+        .catch((e) => {
           console.error(e);
-          alert('Error when trying to delete file.'); 
-        })
+          alert("Error when trying to delete file.");
+        });
     }
-  }
+  };
 
   useEffect(() => {
     const getPhotos = async () => {
-      setLoading(true); 
-      setPhotos(await getAll()); 
-      setLoading(false); 
-    }
-    getPhotos(); 
-  }, []); 
+      setLoading(true);
+      setPhotos(await getAll());
+      setLoading(false);
+    };
+    getPhotos();
+  }, []);
 
   return (
-    <Container>  
-      <Area>
-        <Header>Photo Gallery</Header>
-      
-        {/*parte de upload*/}
-        <UploadForm method="POST" onSubmit={handleSubmit} encType="multipart/form-data" >
-          <input type="file" name="image" id="image-upload" required disabled={sending} />
-          <input type="submit" name="submit" id="submit" disabled={sending} value={sending ? "Sending..." : "Submit"} />
-        </UploadForm>
+    <Fragment>
+      <GlobalStyle />
+      <Container>
+        <Area>
+          <Header>Photo Gallery</Header>
 
-        {/*lista de fotos*/}
-        {loading &&  
-          (<ScreenWarning>
-            <div className="emoji">✋</div>
-            <div className="loading-message">Loading...</div>
-          </ScreenWarning>)
-        }
+          {/*parte de upload*/}
+          <UploadForm
+            method="POST"
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+          >
+            <input
+              type="file"
+              name="image"
+              id="image-upload"
+              required
+              disabled={sending}
+            />
+            <input
+              type="submit"
+              name="submit"
+              id="submit"
+              disabled={sending}
+              value={sending ? "Sending..." : "Submit"}
+            />
+          </UploadForm>
 
-        {!loading && photos.length > 0 && 
-          <PhotoList>
-            {photos.map((photo, index) => (
-              <PhotoItem key={index} {...photo} handleClick={deletePhoto} />
-            ))}
-          </PhotoList>
-        }
-        
-        {!loading && photos.length == 0 && 
-          <ScreenWarning>
-            <div className="emoji">😞</div>
-            <div className="loading-message">There are no photos storaged :(</div>
-          </ScreenWarning>
-        }
+          {/*lista de fotos*/}
+          {loading && (
+            <ScreenWarning>
+              <div className="emoji">✋</div>
+              <div className="loading-message">Loading...</div>
+            </ScreenWarning>
+          )}
 
-      </Area>
-    </Container>
-  )
+          {!loading && photos.length > 0 && (
+            <PhotoList>
+              {photos.map((photo, index) => (
+                <PhotoItem key={index} {...photo} handleClick={deletePhoto} />
+              ))}
+            </PhotoList>
+          )}
+
+          {!loading && photos.length == 0 && (
+            <ScreenWarning>
+              <div className="emoji">😞</div>
+              <div className="loading-message">
+                There are no photos storaged :(
+              </div>
+            </ScreenWarning>
+          )}
+        </Area>
+      </Container>
+    </Fragment>
+  );
 }

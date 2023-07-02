@@ -1,18 +1,18 @@
-import styled from "styled-components"; 
+import styled from "styled-components";
 
 export const Container = styled.div`
     background-color: #27282f; 
     color: #fff; 
     width: 100%;
     min-height: 100vh; 
-`; 
+`;
 
 export const Area = styled.div`
     margin: auto; 
     padding: 1.5rem 0;
     max-width: 980px;  
     width: 90vw; 
-`; 
+`;
 
 export const Header = styled.h1`
     text-align: center;
@@ -35,15 +35,32 @@ export const ScreenWarning = styled.div`
 
 export const PhotoList = styled.div`
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 24%));
     gap: 0.8rem; 
-`; 
+
+    @media only screen and (max-width: 695px) {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+`;
 
 export const UploadForm = styled.form`
+    display: flex;
+    align-items: center;
     background-color: #3d3f43;
     padding: 15px; 
     border-radius: 10px; 
     margin-bottom: 2rem; 
+
+    input {
+        display: inline-block;
+        max-width: 100%;
+    }
+
+
+    @media only screen and (max-width: 420px) {
+        gap: 1rem; 
+        flex-direction: column;
+    }
 
     #submit {
         background-color: #756df7; 
