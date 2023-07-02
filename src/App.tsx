@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent } from "react";
-import { getAll, insert } from "./services/photos";
+import { getAll, insert, remove } from "./services/photos";
 import { Photo } from "./types/photo";
 import PhotoItem from "./components/PhotoItem";
 import { Area, Container, Header,
@@ -31,6 +31,29 @@ export default function App() {
     }
   }
 
+  const deletePhoto = (id: string) => {
+    console.log(photos); 
+    if(id != null && id.length > 0) {
+      remove(id)
+        .then(data => {
+          console.log(data);
+          alert('The file was successfully deleted!'); 
+          return getAll();
+        })
+        .then(data => {
+          if(data.length > 0) {
+            setPhotos(data); 
+          } else {
+            setPhotos([]); 
+          }
+        })
+        .catch(e => {
+          console.error(e);
+          alert('Error when trying to delete file.'); 
+        })
+    }
+  }
+
   useEffect(() => {
     const getPhotos = async () => {
       setLoading(true); 
@@ -43,26 +66,26 @@ export default function App() {
   return (
     <Container>  
       <Area>
-        <Header>Galeria de Fotos</Header>
+        <Header>Photo Gallery</Header>
       
         {/*parte de upload*/}
         <UploadForm method="POST" onSubmit={handleSubmit} encType="multipart/form-data" >
           <input type="file" name="image" id="image-upload" required disabled={sending} />
-          <input type="submit" name="submit" id="submit" disabled={sending} value={sending ? "Enviando..." : "Enviar"} />
+          <input type="submit" name="submit" id="submit" disabled={sending} value={sending ? "Sending..." : "Submit"} />
         </UploadForm>
 
         {/*lista de fotos*/}
         {loading &&  
           (<ScreenWarning>
             <div className="emoji">✋</div>
-            <div className="loading-message">Carregando...</div>
+            <div className="loading-message">Loading...</div>
           </ScreenWarning>)
         }
 
         {!loading && photos.length > 0 && 
           <PhotoList>
             {photos.map((photo, index) => (
-              <PhotoItem key={index} {...photo} />
+              <PhotoItem key={index} {...photo} handleClick={deletePhoto} />
             ))}
           </PhotoList>
         }
@@ -70,7 +93,7 @@ export default function App() {
         {!loading && photos.length == 0 && 
           <ScreenWarning>
             <div className="emoji">😞</div>
-            <div className="loading-message">Não há fotos cadastradas :(</div>
+            <div className="loading-message">There are no photos storaged :(</div>
           </ScreenWarning>
         }
 

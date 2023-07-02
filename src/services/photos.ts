@@ -1,11 +1,10 @@
 import { storage } from "../libs/firebase";
-import { ref, listAll, getDownloadURL, uploadBytes } from "firebase/storage";
+import { ref, listAll, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
 import { Photo } from "../types/photo"; 
 import { v4 as createId } from "uuid";
 
 export const getAll = async () => {
     const list: Photo[] = []; 
-    
     const imagesFolder = ref(storage, "images"); 
     const photoList = await listAll(imagesFolder); 
 
@@ -29,7 +28,12 @@ export const insert = async (fileData: File) => {
 
         return {name: upload.ref.name, url: photoURL} as Photo; 
     } else {
-        return new Error("Tipo de arquivo não permitido"); 
+        return new Error("Type not allowed.\nOnly the following types are accepted: .jpg, .jpeg or .png"); 
     }
+}
 
+export const remove = (id: string) => {
+    const desertRef = ref(storage, `images/${id}`); 
+    return deleteObject(desertRef); 
+    
 }

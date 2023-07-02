@@ -1,13 +1,26 @@
-import { Container } from "./styles"; 
-import { Photo } from "../../types/photo";
+import { Container, Content, Buttons } from "./styles"; 
+import { PhotoItemProps } from "../../types/photo";
 
-export default function PhotoItem({name, url} : Photo) {
+export default function PhotoItem({name, url, handleClick} : PhotoItemProps) {
+
     return (
         <Container>
-            <a target="_blank" href={url}>
+            <Content>
                 <img src={url} alt={name} />
                 <span>{name}</span>
-            </a>
+            </Content>
+            <Buttons>
+                <a 
+                href={url}
+                download={url}
+                target="_blank">Download</a>
+
+                <button 
+                onClick={() => handleClick(name)}
+                className="delete">
+                    Delete
+                </button>
+            </Buttons>
         </Container>
     )
 }
