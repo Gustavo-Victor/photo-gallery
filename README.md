@@ -14,14 +14,6 @@
     ✔ Projeto concluído
 </p>
 
-<p align="center">
-    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/Gustavo-Victor/pomodoro-clock?style=flat">
-    <img alt="GitHub forks" src="https://img.shields.io/github/forks/Gustavo-Victor/pomodoro-clock?style=flat">
-    <img alt="GitHub watchers" src="https://img.shields.io/github/watchers/Gustavo-Victor/pomodoro-clock?style=flat">
-    <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/Gustavo-Victor/pomodoro-clock">
-    <img alt="GitHub repo file count" src="https://img.shields.io/github/directory-file-count/Gustavo-Victor/pomodoro-clock">
-</p>
-
 <hr/>
 
 
